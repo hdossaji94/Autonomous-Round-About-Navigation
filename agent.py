@@ -19,6 +19,10 @@ class Agent(object):
         self.gvel = self.gvel/(sqrt(self.gvel.dot(self.gvel )))*self.prefspeed       
         self.maxspeed = float(csvParameters[7]) # the maximum sped of the agent
         self.radius = float(csvParameters[8]) # the radius of the agent
+        self.xposition1 = float(csvParameters[9]) #the first x position of the line
+        self.xposition2 = float(csvParameters[10]) #the second x position of the line
+        self.yposition1 = float(csvParameters[11]) #the first y position of the line
+        self.yposition2 = float(csvParameters[12]) #the first y position of the line        
         self.goalRadiusSq =goalRadiusSq # parameter to determine if agent is close to the goal
         self.atGoal = False # has the agent reached its goal?
         self.ksi = ksi # the relaxation time used to compute the goal force

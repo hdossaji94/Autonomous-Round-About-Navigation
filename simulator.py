@@ -1,5 +1,6 @@
 import numpy as np
 from tkinter import *
+import tkinter as tk
 import time
 import functools
 from agent import Agent
@@ -29,6 +30,7 @@ step = False
 circles = []
 velLines = []
 gvLines = []
+tracks = []
 
 def readScenario(fileName, scalex=1., scaley=1.):
     """
@@ -66,16 +68,19 @@ def initWorld(canvas):
        
     colors = ["#FAA", "blue","yellow", "white"]
     for a in agents:
-        circles.append(canvas.create_oval(0, 0, a.radius, a.radius, fill=colors[a.gid%4])) # color the disc of an agenr based on its group id
-        velLines.append(canvas.create_line(0,0,10,10,fill="red"))
-        gvLines.append(canvas.create_line(0,0,10,10,fill="green"))
+        if a.gid == 0 or a.gid == 1:
+            circles.append(canvas.create_oval(0, 0, a.radius, a.radius, fill=colors[a.gid%4])) # color the disc of an agenr based on its group id
+            velLines.append(canvas.create_line(0,0,10,10,fill="red"))
+            gvLines.append(canvas.create_line(0,0,10,10,fill="green"))
+        elif a.gid == 2:
+            tracks.append(canvas.create_line(a.xposition1, a.yposition1, a.xposition2, a.yposition2,fill=colors[a.gid%4]))
       
 def drawWorld():
     """
         draw the agents
     """
 
-    for i in range(len(agents)):
+    for i in range(len(circles)):
         agent = agents[i]
         if not agent.atGoal:
             canvas.coords(circles[i],world_scale*(agent.pos[0]- agent.radius - world_xmin), world_scale*(agent.pos[1] - agent.radius - world_ymin), world_scale*(agent.pos[0] + agent.radius - world_xmin), world_scale*(agent.pos[1] + agent.radius - world_ymin))
@@ -87,6 +92,7 @@ def drawWorld():
             else:
                 canvas.itemconfigure(velLines[i], state="hidden")
                 canvas.itemconfigure(gvLines[i], state="hidden")
+                
 
 def on_key_press(event):
     """
@@ -174,8 +180,8 @@ canvas = Canvas(win, width=pixelsize, height=pixelsize, background="#666")
 #print(height)
 # width= 1024 height = 1024
 #roundabout
-x = canvas.create_oval(200,200,824,824) #outside circle
-canvas.create_oval(424,424,600,600) #inside circle
+canvas.create_oval(200,200,824,824) #outside circle
+circle = canvas.create_oval(424,424,600,600) #inside circle
 canvas.create_oval(312,312,712,712, dash=(3,5)) #middle circle
 #North lane
 canvas.create_line(400, 0, 400, 220) #left line
@@ -193,6 +199,9 @@ canvas.create_line(0, 512, 200, 512,dash=(3,5)) #middle line
 canvas.create_line(1024, 400, 804, 400) #top line
 canvas.create_line(1024, 624, 804, 624) #bottom line
 canvas.create_line(1024, 512, 824, 512,dash=(3,5)) #middle line
+
+#canvas.create_arc(210, 200, 325, 500,start = 120, extent=80, style=tk.ARC)
+
 
 canvas.pack()
 initWorld(canvas)
