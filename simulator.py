@@ -4,6 +4,7 @@ import tkinter as tk
 import time
 import functools
 from agent import Agent
+from scipy.misc import comb
 
 """
     Initalize parameters to run a simulation
@@ -157,7 +158,45 @@ def drawFrame(dt):
         
         win.title('Multi-Agent Navigation')
         win.after(framedelay,lambda: drawFrame(dt))
-  
+        
+        
+        
+def bernstein_poly(i, n, t):
+    """
+     The Bernstein polynomial of n, i as a function of t
+    """
+
+    return comb(n, i) * ( t**(n-i) ) * (1 - t)**i
+
+
+def bezier_curve(points, nTimes=1000):
+    """
+       Given a set of control points, return the
+       bezier curve defined by the control points.
+
+       points should be a list of lists, or list of tuples
+       such as [ [1,1], 
+                 [2,3], 
+                 [4,5], ..[Xn, Yn] ]
+        nTimes is the number of time steps, defaults to 1000
+
+        See http://processingjs.nihongoresources.com/bezierinfo/
+    """
+
+    nPoints = len(points)
+    xPoints = np.array([p[0] for p in points])
+    yPoints = np.array([p[1] for p in points])
+
+    t = np.linspace(0.0, 1.0, nTimes)
+
+    polynomial_array = np.array([ bernstein_poly(i, nPoints-1, t) for i in range(0, nPoints)   ])
+
+    xvals = np.dot(xPoints, polynomial_array)
+    yvals = np.dot(yPoints, polynomial_array)
+
+    return xvals, yvals
+    
+
 
 #=======================================================================================================================
 # Main execution of the code
@@ -181,7 +220,7 @@ canvas = Canvas(win, width=pixelsize, height=pixelsize, background="#666")
 # width= 1024 height = 1024
 #roundabout
 canvas.create_oval(200,200,824,824) #outside circle
-circle = canvas.create_oval(424,424,600,600) #inside circle
+canvas.create_oval(424,424,600,600) #inside circle
 canvas.create_oval(312,312,712,712, dash=(3,5)) #middle circle
 #North lane
 canvas.create_line(400, 0, 400, 220) #left line
@@ -201,6 +240,16 @@ canvas.create_line(1024, 624, 804, 624) #bottom line
 canvas.create_line(1024, 512, 824, 512,dash=(3,5)) #middle line
 
 #canvas.create_arc(210, 200, 325, 500,start = 120, extent=80, style=tk.ARC)
+
+#East Lane Basier Points
+Epts = [[1024,456], [904,456], [824,512],[780,380], [630, 300]]
+for a in range(len(Epts)):
+    canvas.create_oval(Epts[a][0], Epts[a][1], Epts[a][0], Epts[a][1], width = 5, fill = 'yellow')
+xvals, yvals = bezier_curve(Epts, nTimes=1000)
+for a in range(999):
+    canvas.create_line(xvals[a],yvals[a],xvals[a+1],yvals[a+1], fill='pink')
+    
+    
 
 
 canvas.pack()
