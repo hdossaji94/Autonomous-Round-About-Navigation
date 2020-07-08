@@ -1,7 +1,7 @@
 # Autonomous-Round-About-Navigation
 Autonomous motion planning in a roundabout scenario using a forced based approach with parametric equations
 
-Owners: Huzefa Dossaji, Sanket Bachuwar, Ardashir Bulsura Motion Planning of a Vehicle in a Roundabout Scenario
+Owners: Huzefa Dossaji, Sanket Bachuwar, Ardashir Bulsara Motion Planning of a Vehicle in a Roundabout Scenario
 
 The objective was achieved using the method of waypoints and forced based local navigation. Bezier curves were used to generate the waypoints and trajectory for the agents to enter and exit the roundabout as the entry and exit lanes designed were single lanes. While forced based navigation was used inside the roundabout, as it consisted of two lanes. This allowed multiple agents to navigate the roundabout at the same time without colliding with each other.
 
